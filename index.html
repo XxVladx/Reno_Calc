@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta content="width=device-width,initial-scale=1" name="viewport" />
     <title>
-        Reno Calc Web 0.4.8
+        Reno Calc Web 0.4.11
     </title>
     <link href="style.css" rel="stylesheet" />
 </head>
@@ -15,7 +15,7 @@
         <strong>
             ▦ RENO CALC
             <small>
-                WEB 0.4.8
+                WEB 0.4.11
             </small>
         </strong>
         <select id="lang" style="width:130px">
@@ -26,10 +26,17 @@
                 Français
             </option>
         </select>
+        <nav aria-label="Sections" class="main-nav" id="mainNav">
+            <button data-nav="settings" type="button">Settings</button>
+            <button data-nav="projects" type="button">Saved projects</button>
+            <button data-nav="estimate" type="button">Estimate</button>
+            <button data-nav="costs" type="button">Cost &amp; profit</button>
+            <button data-nav="billing" type="button">Invoices</button>
+        </nav>
     </header>
     <main>
         
-<section class="panel">
+<section class="panel" id="settingsSection">
     <h2 data-t="settings">Company &amp; tax settings</h2>
 
     <div class="grid">
@@ -120,7 +127,7 @@
     </button>
 </section>
 
-        <section class="panel">
+        <section class="panel" id="projectsSection">
             <h2 data-t="projectsTitle">
                 Saved projects
             </h2>
@@ -159,12 +166,14 @@
             </p>
             <p aria-live="polite" class="muted" id="draftStatus">
             </p>
+            <p aria-live="polite" class="muted" id="backupStatus">
+            </p>
             <!-- <p class="muted" data-t="localWarning">
                 Projects saved on this device can be lost if browser data is cleared. Export a JSON backup for
                 safekeeping.
             </p> -->
         </section>
-        <section class="panel">
+        <section class="panel" id="estimateSection">
             <h2 data-t="estimate">
                 Estimate
             </h2>

@@ -698,6 +698,18 @@ tr {
 #qNotesTitle, #qPaymentScheduleTitle { font-weight:700; }
 #qPaymentScheduleBlock { margin-top:14px; }
 
-#phoneError:empty {
-  display: none;
-}
+/* Backup reminder */
+#backupStatus.warning{color:#9b4a21;font-weight:600}
+@media print{#backupStatus{display:none!important}}
+
+/* Inline phone error */
+#phoneError:empty{display:none}
+
+/* Section navigation inside the header */
+header{flex-wrap:wrap;row-gap:10px}
+.main-nav{flex:1 0 100%;order:3;display:flex;flex-wrap:wrap;gap:4px;padding-top:10px;border-top:1px solid #ffffff33}
+.main-nav button{margin:0;padding:6px 12px;font-size:13px;background:transparent;color:#d6e8ee;border:1px solid transparent}
+.main-nav button:hover:not(:disabled){background:#ffffff26}
+.main-nav button[aria-current="true"]{background:#fff;color:#153b50;font-weight:600}
+.rc-tab-hidden{display:none!important}
+@media print{.main-nav{display:none!important}}
