@@ -697,3 +697,7 @@ tr {
 .section-field-label { display:block; font-weight:700; margin-top:14px; margin-bottom:6px; }
 #qNotesTitle, #qPaymentScheduleTitle { font-weight:700; }
 #qPaymentScheduleBlock { margin-top:14px; }
+
+#phoneError:empty {
+  display: none;
+}

@@ -223,6 +223,19 @@ window.addEventListener('beforeunload', e => { if (draftWriteFailed || draftTime
 window.addEventListener('pagehide', () => { if (draftTimer !== null) flushDraft() });
 // Full-library backups. Existing saved projects are never silently overwritten.
 const BACKUP_FORMAT = 'reno-calc-all-projects', BACKUP_VERSION = 1;
+// Phone must be exactly 514-888-1234 (digits and dashes). Empty is allowed.
+const PHONE_RE = /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/;
+function checkPhone(show) {
+  const el = $('phone'), note = $('phoneError'), v = el.value.trim(), ok = v === '' || PHONE_RE.test(v);
+  el.classList.toggle('rc-invalid', !ok);
+  el.setAttribute('aria-invalid', ok ? 'false' : 'true');
+  note.textContent = ok ? '' : backupText('Format requis : 514-888-1234 (avec tirets).', 'Required format: 514-888-1234 (with dashes).');
+  if (!ok && show) el.focus();
+  return ok;
+}
+$('phone').addEventListener('input', () => { if ($('phoneError').textContent) checkPhone(false) });
+$('phone').addEventListener('blur', () => checkPhone(false));
+document.getElementById('phone').addEventListener('input', () => checkPhone(false));
 function backupText(fr, en) { return $('lang').value === 'fr' ? fr : en }
 function downloadBackup(name, data) { const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = name; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 30000) }
 function exportAllProjects() {
@@ -357,7 +370,7 @@ $('rows').addEventListener('keydown', function (event) {
   if (next.tagName === 'INPUT' && next.type === 'text') next.select();
 });
 
-$('targetMargin').addEventListener('input', () => { queueDraft(); renderCostRows() }); $('applySuggested').onclick = () => { if (isLocked()) return; const fr = $('lang').value === 'fr'; if (!confirm(fr ? 'Remplacer les prix de vente de chaque poste par les prix suggérés ?' : 'Replace each item selling price with the suggested price?')) return; const m = marginValue(); items.forEach(r => { const cost = num(r.materialCost) + num(r.laborCost); if (cost > 0) r.price = rnd(cost / (1 - m / 100)) }); render() }; $('quoteNo').value = initialEstimateNumber(); $('date').value = new Date().toLocaleDateString('en-CA'); try { const s = JSON.parse(localStorage.getItem('rc_settings')); if (s) { Object.entries(s).forEach(([k, v]) => { if (k !== 'region' && $(k) && $(k).type !== 'file') $(k).value = v }); populateRegionOptions(s.region); logo = s.logo || '' } } catch (e) { } if (!$('region').options.length) populateRegionOptions(); if (!$('region').value) { rcFillTaxSettings(); } else { rcShowTaxReferenceNotice(); } applyProjectTaxes(settings());['client', 'clientContact', 'project', 'quoteNo', 'date', 'notes', 'paymentSchedule'].forEach(id => $(id).addEventListener('input', queueDraft)); $('lang').onchange = () => { translate(); storeSettings() };['rate1', 'rate2', 'tax1', 'tax2'].forEach(k => $(k).addEventListener('input', () => { updateTaxWarning(); queueDraft() })); $('saveSettings').onclick = () => { if (storeSettings()) { updateTaxWarning(); refreshLogoPreview(); alert($('lang').value === 'fr' ? 'Paramètres enregistrés' : 'Settings saved') } }; $('add').onclick = () => {
+$('targetMargin').addEventListener('input', () => { queueDraft(); renderCostRows() }); $('applySuggested').onclick = () => { if (isLocked()) return; const fr = $('lang').value === 'fr'; if (!confirm(fr ? 'Remplacer les prix de vente de chaque poste par les prix suggérés ?' : 'Replace each item selling price with the suggested price?')) return; const m = marginValue(); items.forEach(r => { const cost = num(r.materialCost) + num(r.laborCost); if (cost > 0) r.price = rnd(cost / (1 - m / 100)) }); render() }; $('quoteNo').value = initialEstimateNumber(); $('date').value = new Date().toLocaleDateString('en-CA'); try { const s = JSON.parse(localStorage.getItem('rc_settings')); if (s) { Object.entries(s).forEach(([k, v]) => { if (k !== 'region' && $(k) && $(k).type !== 'file') $(k).value = v }); populateRegionOptions(s.region); logo = s.logo || '' } } catch (e) { } if (!$('region').options.length) populateRegionOptions(); if (!$('region').value) { rcFillTaxSettings(); } else { rcShowTaxReferenceNotice(); } applyProjectTaxes(settings());['client', 'clientContact', 'project', 'quoteNo', 'date', 'notes', 'paymentSchedule'].forEach(id => $(id).addEventListener('input', queueDraft)); $('lang').onchange = () => { translate(); storeSettings() };['rate1', 'rate2', 'tax1', 'tax2'].forEach(k => $(k).addEventListener('input', () => { updateTaxWarning(); queueDraft() })); $('saveSettings').onclick = () => { if (!checkPhone(true)) return; if (storeSettings()) { updateTaxWarning(); refreshLogoPreview(); alert($('lang').value === 'fr' ? 'Paramètres enregistrés' : 'Settings saved') } }; $('add').onclick = () => {
   items.push({ description: '', unit: '', qty: 1, price: 0 });
   render();
   // After Enter or click on Add work, place focus in the new row's Description cell.
