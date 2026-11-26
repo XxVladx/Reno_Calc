@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width,initial-scale=1" name="viewport" />
+    <title>
+        Reno Calc Web 0.4.8
+    </title>
+    <link href="style.css" rel="stylesheet" />
+</head>
+
+<body>
+    <header>
+        <strong>
+            ▦ RENO CALC
+            <small>
+                WEB 0.4.8
+            </small>
+        </strong>
+        <select id="lang" style="width:130px">
+            <option value="en">
+                English
+            </option>
+            <option value="fr">
+                Français
+            </option>
+        </select>
+    </header>
+    <main>
+        
+<section class="panel">
+    <h2 data-t="settings">Company &amp; tax settings</h2>
+
+    <div class="grid">
+        <div>
+            <label for="company" data-t="company">Company</label>
+            <input id="company" type="text" required />
+        </div>
+
+        <div>
+            <label for="email" data-t="email">Business email</label>
+            <input id="email" type="email"
+                   placeholder="contact@example.com" required />
+        </div>
+
+        <div>
+            <label for="phone" data-t="phone">Business phone</label>
+            <input id="phone" type="tel"
+                   placeholder="514-888-1234"
+                   pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                   title="Use format 514-888-1234" required />
+        </div>
+
+        <div>
+            <label for="address" data-t="address">Business address</label>
+            <input id="address" type="text" required />
+        </div>
+
+        <div>
+            <label for="country" data-t="country">Country</label>
+            <select id="country" required>
+                <option value="CA">Canada</option>
+                <option value="US">United States</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="region" data-t="region">Province / State</label>
+            <select id="region" required>
+                <option value="">Select a Province / State</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="tax1" data-t="tax1">Tax 1 name</label>
+            <input id="tax1" type="text" readonly />
+        </div>  
+
+        <div>
+            <label for="rate1" data-t="rate1">Tax 1 rate (%)</label>
+            <input id="rate1" type="number"
+                   min="0" max="100" step="0.001" readonly />
+        </div>
+
+        <div class="tax2-field">
+            <label for="tax2" data-t="tax2">Tax 2 name</label>
+            <input id="tax2" type="text" readonly />
+        </div>
+
+        <div class="tax2-field">
+            <label for="rate2" data-t="rate2">Tax 2 rate (%)</label>
+            <input id="rate2" type="number"
+                   min="0" max="100" step="0.001" readonly />
+        </div>
+
+        <div>
+            <label for="currency" data-t="currency">Currency</label>
+            <select id="currency" required>
+                <option value="CAD">CAD</option>
+                <option value="USD">USD</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="logo" data-t="logo">Company logo</label>
+            <input id="logo" type="file"
+                   accept="image/png,image/jpeg,image/webp" />
+        </div>
+    </div>
+
+    <p class="muted" data-t="taxHelp">
+        Tax rates are reference values. Verify local tax rules
+        before generating an estimate.
+    </p>
+
+    <button type="button" data-t="saveSettings" id="saveSettings">
+        Save settings
+    </button>
+</section>
+
+        <section class="panel">
+            <h2 data-t="projectsTitle">
+                Saved projects
+            </h2>
+            <div class="projectlist">
+                <select aria-label="Saved projects" id="savedProjects">
+                </select>
+                <button data-t="newProject" id="newProject">
+                    New estimate
+                </button>
+                <button data-t="saveLocal" id="saveLocal">
+                    Save to this device
+                </button>
+                <button class="secondary" data-t="openLocal" id="openLocal">
+                    Open selected
+                </button>
+                <button class="secondary" data-t="deleteLocal" id="deleteLocal">
+                    Delete selected
+                </button>
+                <button id="finalizeEstimate" type="button">
+                    Finalize estimate
+                </button>
+                <button class="secondary" hidden="" id="unlockEstimate" type="button">
+                    Unlock estimate
+                </button>
+                <span aria-live="polite" id="lockStatus" role="status">
+                </span>
+                <button id="backupAll" type="button">
+                    Backup all projects
+                </button>
+                <button id="restoreAll" type="button">
+                    Restore backup
+                </button>
+                <input accept=".json,application/json" hidden="" id="backupFile" type="file" />
+            </div>
+            <p aria-live="polite" class="status" id="projectStatus">
+            </p>
+            <p aria-live="polite" class="muted" id="draftStatus">
+            </p>
+            <!-- <p class="muted" data-t="localWarning">
+                Projects saved on this device can be lost if browser data is cleared. Export a JSON backup for
+                safekeeping.
+            </p> -->
+        </section>
+        <section class="panel">
+            <h2 data-t="estimate">
+                Estimate
+            </h2>
+            <div class="grid">
+                <div>
+                    <label data-t="client">
+                        Client
+                    </label>
+                    <input id="client" />
+                </div>
+                <div>
+                    <label data-t="project">
+                        Project
+                    </label>
+                    <input id="project" />
+                </div>
+                <div>
+                    <label data-t="clientContact">
+                        Client contact / address
+                    </label>
+                    <input id="clientContact" />
+                </div>
+                <div>
+                    <label data-t="quoteNo">
+                        Estimate number
+                    </label>
+                    <input id="quoteNo" value="RC-001" />
+                </div>
+                <div>
+                    <label data-t="date">
+                        Date
+                    </label>
+                    <input id="date" type="date" />
+                </div>
+            </div>
+            <div class="panel" style="margin:16px 0;padding:14px;border:1px solid #dce7ea;box-shadow:none">
+                <h3 id="projectTaxTitle" style="margin-top:0">
+                    Estimate taxes
+                </h3>
+                <div class="grid">
+                    <div>
+                        <label for="pTax1" id="pTax1NameLabel">
+                            Tax 1 name
+                        </label>
+                        <input id="pTax1" />
+                    </div>
+                    <div>
+                        <label for="pRate1" id="pRate1Label">
+                            Tax 1 rate (%)
+                        </label>
+                        <input id="pRate1" max="100" min="0" step="0.001" type="number" />
+                    </div>
+                    <div>
+                        <label for="pTax2" id="pTax2NameLabel">
+                            Tax 2 name
+                        </label>
+                        <input id="pTax2" />
+                    </div>
+                    <div>
+                        <label for="pRate2" id="pRate2Label">
+                            Tax 2 rate (%)
+                        </label>
+                        <input id="pRate2" max="100" min="0" step="0.001" type="number" />
+                    </div>
+                </div>
+                <p id="taxMismatch" role="status" style="color:#9a5810;font-size:13px">
+                </p>
+            </div>
+            <h3 data-t="items">
+                Work items
+            </h3>
+            <div class="scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th data-t="description">
+                                Description
+                            </th>
+                            <th data-t="unit">
+                                Unit
+                            </th>
+                            <th data-t="qty">
+                                Qty
+                            </th>
+                            <th data-t="price">
+                                Unit price
+                            </th>
+                            <th data-t="amount">
+                                Amount
+                            </th>
+                            <th>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="rows">
+                    </tbody>
+                </table>
+            </div>
+            <button data-t="add" id="add">
+                Add Materials
+            </button>
+            <div class="summary">
+                <p>
+                    <span data-t="subtotal">
+                        Subtotal
+                    </span>
+                    <b id="subtotal">
+                    </b>
+                </p>
+                <p>
+                    <span id="taxLabel1">
+                    </span>
+                    <b id="taxAmount1">
+                    </b>
+                </p>
+                <p>
+                    <span id="taxLabel2">
+                    </span>
+                    <b id="taxAmount2">
+                    </b>
+                </p>
+                <p class="strong">
+                    <span data-t="total">
+                        Total
+                    </span>
+                    <span id="total">
+                    </span>
+                </p>
+            </div>
+            <label class="section-field-label" for="notes" data-t="notes">
+                Notes
+            </label>
+            <textarea id="notes"></textarea>
+            <label class="section-field-label" for="paymentSchedule" data-t="paymentSchedule">Payment Schedule</label>
+            <textarea id="paymentSchedule"></textarea>
+            <p>
+                <label for="paperSize" id="paperLabel"
+                    style="display:inline-flex;align-items:center;gap:6px;margin-right:10px">
+                    Paper
+                    <select id="paperSize" style="width:auto;min-width:90px">
+                        <option value="Letter">
+                            Letter
+                        </option>
+                        <option value="A4">
+                            A4
+                        </option>
+                    </select>
+                </label>
+                <button id="preview" type="button">
+                    Preview estimate
+                </button>
+                <button id="validateEstimate" type="button">
+                    Check estimate
+                </button>
+                <button data-t="pdf" id="pdf">
+                    Print / Save PDF
+                </button>
+                <button class="secondary" data-t="save" id="save">
+                    Save project
+                </button>
+                <button class="secondary" data-t="load" id="loadBtn">
+                    Open project
+                </button>
+                <!-- <button class="secondary" id="exportJson">
+                    Export JSON
+                </button>
+                <input accept=".json" hidden="" id="load" type="file" /> -->
+            </p>
+            <div aria-live="polite" id="validationResults" role="status"
+                style="display:none;border:1px solid #d2e2e5;border-radius:8px;padding:12px;margin:12px 0;white-space:pre-line">
+            </div>
+            <p class="muted" data-t="local">
+                Prototype: project files are saved locally; no account or payment system yet.
+            </p>
+        </section>
+        <section class="panel private-costs" id="privateCosts">
+            <h2 id="costTitle">
+                Internal cost &amp; profit calculator
+            </h2>
+            <p class="muted" id="costHelp">
+                Contractor-only information. Costs and profit never appear in the client estimate preview or printed
+                PDF. JSON backups contain these values: keep backups private.
+            </p>
+            <div class="grid">
+                <div>
+                    <label for="targetMargin" id="marginLabel">
+                        Target gross profit margin (%)
+                    </label>
+                    <input id="targetMargin" max="99.99" min="0" step="0.1" type="number" value="30" />
+                </div>
+            </div>
+            <div class="scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th id="costDescription">
+                                Work item
+                            </th>
+                            <th id="costMaterial">
+                                Material cost / unit
+                            </th>
+                            <th id="costLabor">
+                                Labor cost / unit
+                            </th>
+                            <th id="costQty">
+                                Qty
+                            </th>
+                            <th id="costTotal">
+                                Total cost
+                            </th>
+                            <th id="costSuggested">
+                                Suggested unit selling price
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="costRows">
+                    </tbody>
+                </table>
+            </div>
+            <div class="summary">
+                <p>
+                    <span id="costMaterialsLabel">
+                        Materials
+                    </span>
+                    <b id="costMaterialsValue">
+                    </b>
+                </p>
+                <p>
+                    <span id="costLaborLabel">
+                        Labor
+                    </span>
+                    <b id="costLaborValue">
+                    </b>
+                </p>
+                <p>
+                    <span id="costAllLabel">
+                        Total direct costs
+                    </span>
+                    <b id="costAllValue">
+                    </b>
+                </p>
+                <p>
+                    <span id="costRevenueLabel">
+                        Estimate subtotal (before taxes)
+                    </span>
+                    <b id="costRevenueValue">
+                    </b>
+                </p>
+                <p>
+                    <span id="costProfitLabel">
+                        Estimated gross profit
+                    </span>
+                    <b id="costProfitValue">
+                    </b>
+                </p>
+                <p>
+                    <span id="costMarginActualLabel">
+                        Actual gross margin
+                    </span>
+                    <b id="costMarginActualValue">
+                    </b>
+                </p>
+                <p>
+                    <span id="costRecommendedLabel">
+                        Suggested subtotal at target margin
+                    </span>
+                    <b id="costRecommendedValue">
+                    </b>
+                </p>
+            </div>
+            <p class="muted" id="costCaution">
+                Gross profit excludes overhead, income taxes, financing, and any costs not entered above. Client tax
+                amounts are excluded.
+            </p>
+            <button id="applySuggested" type="button">
+                Apply suggested unit prices
+            </button>
+        </section>
+
+        <section class="panel" id="billingSection">
+          <h2 id="billingHeading">Invoices &amp; Receipts</h2>
+          <p class="muted" id="billingHelp">Create an invoice from the current estimate, record payments, and issue a receipt. Only client-facing prices appear on documents.</p>
+          <div class="grid">
+            <div><label id="billNumberLabel" for="billNumber">Invoice number</label><input id="billNumber" type="text" maxlength="60"></div>
+            <div><label id="billDateLabel" for="billDate">Invoice date</label><input id="billDate" type="date"></div>
+            <div><label id="billDueLabel" for="billDue">Due date</label><input id="billDue" type="date"></div>
+            <div><label id="billPaidLabel" for="billPaid">New payment amount</label><input id="billPaid" type="number" min="0" step="0.01" value="0"></div>
+            <div><label id="billPaymentDateLabel" for="billPaymentDate">Payment date</label><input id="billPaymentDate" type="date"></div>
+            <fieldset class="bill-payment-method"><legend id="billMethodLabel">Payment method</legend>
+              <div class="bill-payment-options" id="billMethod">
+                <label><input type="radio" name="billPaymentMethod" value="cash"><span data-bill-method="cash">Cash</span></label>
+                <label><input type="radio" name="billPaymentMethod" value="cheque"><span data-bill-method="cheque">Cheque</span></label>
+                <label><input type="radio" name="billPaymentMethod" value="bank" checked><span data-bill-method="bank">Bank transfer</span></label>
+                <label><input type="radio" name="billPaymentMethod" value="card"><span data-bill-method="card">Card</span></label>
+                <label><input type="radio" name="billPaymentMethod" value="other"><span data-bill-method="other">Other</span></label>
+              </div>
+            </fieldset>
+            <div><label id="billReferenceLabel" for="billReference">Payment reference (optional)</label><input id="billReference" type="text" maxlength="100"></div>
+          </div>
+          <div class="billing-actions">
+            <button id="billAddPayment" type="button">Add Payment</button>
+          </div>
+          <div id="billPaymentHistory" class="bill-history" aria-live="polite"></div>
+          <div class="billing-actions">
+            <button id="billStatement" type="button">Full Payment Statement</button>
+          </div>
+          <div class="billing-actions">
+            <button id="billCreate" type="button">Create / Update Invoice</button>
+            <button id="billReceipt" type="button">Create Receipt</button>
+            <button id="billPrint" type="button">Print / Save PDF</button>
+            <button id="billSave" type="button">Save Invoice</button>
+          </div>
+          <div class="billing-actions"><label id="billSavedLabel" for="billSaved">Saved invoices</label><select id="billSaved"><option value="">Select invoice</option></select><button id="billOpen" type="button">Open</button><button id="billDelete" type="button">Delete</button></div>
+          <p class="muted" id="billStatus" role="status"></p>
+          <article id="billingDocument" class="billing-document" hidden></article>
+        </section>
+        <section aria-label="Estimate preview" class="quote" id="quote">
+            <div class="quotehead">
+                <div class="quote-brand">
+                    <img alt="" id="qLogo" />
+                    <div class="quote-company">
+                        <h1 id="qCompany">
+                        </h1>
+                        <p class="qContact" id="qContact">
+                        </p>
+                    </div>
+                </div>
+                <div class="quote-document">
+                    <h2 id="qTitle">
+                    </h2>
+                    <p id="qMeta">
+                    </p>
+                </div>
+            </div>
+            <div class="quote-client">
+                <div class="quote-client-main">
+                    <p id="qClient">
+                    </p>
+                    <p id="qClientContact">
+                    </p>
+                </div>
+                <p id="qProject">
+                </p>
+            </div>
+            <table>
+                <thead>
+                    <tr class="repeat-identity">
+                        <th colspan="5" id="qRepeatIdentity">
+                        </th>
+                    </tr>
+                    <tr>
+                        <th id="qh0">
+                        </th>
+                        <th id="qh1">
+                        </th>
+                        <th id="qh2">
+                        </th>
+                        <th id="qh3">
+                        </th>
+                        <th id="qh4">
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="qRows">
+                </tbody>
+            </table>
+            <div class="summary">
+                <p>
+                    <span id="qsLabel">
+                    </span>
+                    <b id="qs">
+                    </b>
+                </p>
+                <p>
+                    <span id="qt1Label">
+                    </span>
+                    <b id="qt1">
+                    </b>
+                </p>
+                <p>
+                    <span id="qt2Label">
+                    </span>
+                    <b id="qt2">
+                    </b>
+                </p>
+                <p class="strong">
+                    <span id="qTotalLabel">
+                    </span>
+                    <b id="qTotal">
+                    </b>
+                </p>
+            </div>
+            <div id="qNotesBlock">
+                <h3 id="qNotesTitle">
+                </h3>
+                <p id="qNotes" style="white-space:pre-wrap">
+                </p>
+            </div>
+            <div id="qPaymentScheduleBlock" style="display:none">
+                <h3 id="qPaymentScheduleTitle"></h3>
+                <p id="qPaymentSchedule" style="white-space:pre-wrap"></p>
+            </div>
+            <div class="signature">
+                <span id="sign">
+                </span>
+                <span id="signDate">
+                </span>
+            </div>
+            <p class="muted" id="qDisclaimer">
+            </p>
+        </section>
+    </main>
+    <div class="modal" id="modal" style="display:none">
+        <article>
+            <h2 data-t="disclaimerTitle">
+                Tax disclaimer &amp; acknowledgment
+            </h2>
+            <p data-t="disclaimer1">
+                Reno Calc calculates estimates using tax rates entered by the user. Applicable taxes depend on location
+                and the type of renovation work.
+            </p>
+            <p data-t="disclaimer2">
+                You are responsible for verifying applicable tax rates, tax treatment and all calculations before
+                issuing an estimate. Reno Calc does not provide tax or legal advice and does not guarantee the accuracy
+                of user-entered rates.
+            </p>
+            <p data-t="disclaimer3">
+                Your tax settings are saved on this device and reused in future estimates until you change them.
+            </p>
+            <label class="check">
+                <input id="accept" type="checkbox" />
+                <span data-t="accept">
+                    I understand and accept responsibility for verifying taxes and reviewing estimates before issuing
+                    them.
+                </span>
+            </label>
+            <p>
+                <button data-t="continue" disabled="" id="continue">
+                    Accept &amp; start
+                </button>
+            </p>
+        </article>
+    </div>
+    <div aria-labelledby="actionTitle" aria-modal="true" class="modal" id="actionDialog" role="dialog"
+        style="display:none">
+        <article style="width:min(100%,460px)">
+            <h2 id="actionTitle">
+            </h2>
+            <p id="actionMessage">
+            </p>
+            <p style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap">
+                <button id="actionCancel" type="button">
+                </button>
+                <button id="actionConfirm" type="button">
+                </button>
+            </p>
+        </article>
+    </div>
+    <script src="script.js">
+    </script>
+</body>
+
+</html>

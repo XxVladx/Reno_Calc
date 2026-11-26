@@ -1,6 +1,3 @@
-# Reno_Calc
-Online invoice calculator for contractors
-
 # Reno Calc Web 0.4.8 — Editable source
 
 Open **index.html** in Chrome or VS Code. All three files must stay in the same folder.
